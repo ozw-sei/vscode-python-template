@@ -1,7 +1,7 @@
 name: Lint
 
 on:
-  push:
+  pull_request:
     paths:
       - '*.py'
 
@@ -18,6 +18,18 @@ jobs:
         with:
           python-version: 3.11.2
           architecture: x64
+      - name: Get Pull Request Number
+        id: pr
+        run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show URL
+        run: echo Pull Request is ${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }}
+
+      # $GITHUB_STEP_SUMMARYに書き込むと、step summaryを生成できる
+      - name: Adding markdown
+        run: echo '### [PR \#${{ steps.pr.outputs.pull_request_number }}](${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }})' >> $GITHUB_STEP_SUMMARY
 
       - name: set PY
         run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
@@ -51,6 +63,17 @@ jobs:
         with:
           path: ~/.cache/pypoetry
           key: poetry-cache-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}
+
+            - name: Get Pull Request Number
+        id: pr
+        run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Show URL
+        run: echo Pull Request is ${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }}
+      # $GITHUB_STEP_SUMMARYに書き込むと、step summaryを生成できる
+      - name: Adding markdown
+        run: echo '### [PR \#${{ steps.pr.outputs.pull_request_number }}](${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }})' >> $GITHUB_STEP_SUMMARY
       - name: Install mypy
         run: pip install mypy
       - uses: reviewdog/action-setup@v1
