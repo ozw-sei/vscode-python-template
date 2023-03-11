@@ -63,7 +63,7 @@ jobs:
           path: ~/.cache/pypoetry
           key: poetry-cache-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}
 
-            - name: Get Pull Request Number
+      - name: Get Pull Request Number
         id: pr
         run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
         env:
