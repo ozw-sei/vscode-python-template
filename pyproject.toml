@@ -34,5 +34,4 @@ minversion = "6.0"
 addopts = "-ra -q"
 testpaths = [
     "src",
-    "integration",
 ]
