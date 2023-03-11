@@ -12,8 +12,10 @@
     "editor.formatOnType": false, // 入力後に自動整形を行わない
   },
   "cSpell.words": [
+    "dciborow",
     "devcontainers",
     "mypy",
+    "pylint",
     "pytest",
     "reviewdog",
     "sasanquaneuf"
