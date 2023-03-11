@@ -1,8 +1,6 @@
 name: Lint
 
-on:
-  pull_request:
-    types: ["opened", "synchronize", "ready_for_review", "reopened"]
+on: [pull_request]
 
 env:
   PYTHON_VERSION: 3.11
