@@ -58,12 +58,10 @@ jobs:
       # $GITHUB_STEP_SUMMARYに書き込むと、step summaryを生成できる
       - name: Adding markdown
         run: echo '### [PR \#${{ steps.pr.outputs.pull_request_number }}](${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }})' >> $GITHUB_STEP_SUMMARY
-      - name: Install mypy
-        run: pip install mypy
-      - uses: reviewdog/action-setup@v1
+      - uses: jordemort/action-pyright@v1
         with:
-          reviewdog_version: latest
-      - name: Run mypy
-        run: poetry run mypy src
+          github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
+          reporter: github-pr-review # Change reporter.
+          lib: true
       - name: Run pytest
         run: poetry run pytest src
