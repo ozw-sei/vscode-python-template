@@ -63,5 +63,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }} # You need this
           reporter: github-pr-review # Change reporter.
           lib: true
+      - uses: dciborow/action-pylint@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
+          reporter: github-pr-review
+          # Change reporter level if you need.
+          # GitHub Status Check won't become failure with warning.
+          level: warning
+          glob_pattern: "**/*.py"
       - name: Run pytest
         run: poetry run pytest src
