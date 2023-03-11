@@ -17,28 +17,7 @@ jobs:
         with:
           python-version: 3.11.2
           architecture: x64
-      - name: Get Pull Request Number
-        id: pr
-        run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Show URL
-        run: echo Pull Request is ${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }}
-
-      # $GITHUB_STEP_SUMMARYに書き込むと、step summaryを生成できる
-      - name: Adding markdown
-        run: echo '### [PR \#${{ steps.pr.outputs.pull_request_number }}](${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }})' >> $GITHUB_STEP_SUMMARY
-
-      - run: pip install pre-commit
-      - name: set PY
-        run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
-      - uses: actions/cache@v1
-        with:
-          path: ~/.cache/pre-commit
-          key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
-      - name: check pre-commit
-        run: pre-commit run --all-files --show-diff-on-failure
+      - uses: pre-commit/action@v3.0.0
 
 
   check-type-and-test:
