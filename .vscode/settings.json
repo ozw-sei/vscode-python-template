@@ -14,8 +14,11 @@
   "cSpell.words": [
     "dciborow",
     "devcontainers",
+    "jordemort",
     "mypy",
     "pylint",
+    "pypoetry",
+    "pyright",
     "pytest",
     "reviewdog",
     "sasanquaneuf"
