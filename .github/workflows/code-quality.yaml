@@ -2,8 +2,7 @@ name: Lint
 
 on:
   pull_request:
-    paths:
-      - '*.py'
+    types: ["opened", "synchronize", "ready_for_review", "reopened"]
 
 env:
   PYTHON_VERSION: 3.11
