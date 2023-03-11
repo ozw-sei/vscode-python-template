@@ -1,0 +1,3 @@
+#
+def ok():
+    assert True
