@@ -22,3 +22,12 @@ repos:
       args: [-i, --wrap-summaries, "120", --wrap-description, "120"]
       language: python
       types: [python]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    - id: check-yaml
+  - repo: https://gitlab.com/bmares/check-json5
+    rev: v1.0.0
+    hooks:
+    - id: check-json5
+

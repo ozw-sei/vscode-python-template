@@ -1,9 +1,8 @@
 name: Lint
 
 on:
-  push:
-    paths:
-      - '*.py'
+  pull_request:
+    types: ["opened", "synchronize", "ready_for_review", "reopened"]
 
 env:
   PYTHON_VERSION: 3.11
@@ -13,23 +12,15 @@ jobs:
   check-lint-and-styling:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v1
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
           python-version: 3.11.2
           architecture: x64
-      - repo: https://github.com/pre-commit/pre-commit-hooks
-        rev: v4.2.0
-      - name: set PY
-        run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
-      - uses: actions/cache@v1
-        with:
-          path: ~/.cache/pre-commit
-          key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
-      - name: Install poetry
-        run: |
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - uses: pre-commit/action@v3.0.0
+
 
   check-type-and-test:
     runs-on: ubuntu-latest
@@ -41,6 +32,10 @@ jobs:
           architecture: x64
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Install poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python - --version 1.4.0
+          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
       - name: Poetry Version
         run: |
           poetry --version
@@ -52,6 +47,17 @@ jobs:
         with:
           path: ~/.cache/pypoetry
           key: poetry-cache-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}
+
+      - name: Get Pull Request Number
+        id: pr
+        run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Show URL
+        run: echo Pull Request is ${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }}
+      # $GITHUB_STEP_SUMMARYに書き込むと、step summaryを生成できる
+      - name: Adding markdown
+        run: echo '### [PR \#${{ steps.pr.outputs.pull_request_number }}](${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }})' >> $GITHUB_STEP_SUMMARY
       - name: Install mypy
         run: pip install mypy
       - uses: reviewdog/action-setup@v1
@@ -60,4 +66,4 @@ jobs:
       - name: Run mypy
         run: poetry run mypy src
       - name: Run pytest
-        run: poetry run pytest
+        run: poetry run pytest src

@@ -10,7 +10,9 @@
     },
     "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {
+      "version": "1.4.0"
+    },
     "ghcr.io/devcontainers-contrib/features/black:2": {},
     "ghcr.io/devcontainers-contrib/features/mypy:2": {}
   },
